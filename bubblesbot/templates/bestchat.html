@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script type="text/javascript">  $(function(){
+$("#chatbot_togle").click(function () {
+          $('#qnimate').addClass('popup-box-on');
+            });
+
+            $("#removeClass").click(function () {
+          $('#qnimate').removeClass('popup-box-on');
+            });
+  })</script>
+</head>
+
+<body>
+<div class="container text-center">
+	<div class="row">
+		    <div class="round hollow text-center">
+        <a href="#" id="chatbot_togle"><span class="glyphicon glyphicon-comment"></span> Try chatting with Bubbles! </a>
+        </div>
+
+        <hr>
+
+	</div>
+</div>
+
+
+<div class="popup-box chat-popup" id="qnimate">
+    		  <div class="popup-head">
+				<div class="popup-head-left pull-left"><img src="http://95.179.253.136/media/avatar/20/01/09/17/06/23dcec3c-6207-4702-a138-c1cf77d9fafb.jpg" alt=""> Bubbles</div>
+					  <div class="popup-head-right pull-right">
+						<button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-off"></i></button>
+            </div>
+			  </div>
+			<div class="popup-messages">
+
+
+
+
+			<div class="direct-chat-messages">
+
+
+					<div class="chat-box-single-line">
+								<abbr class="timestamp">{{ current_date }}</abbr>
+					</div>
+
+
+					<!-- Message. Default to the left -->
+                    <div class="direct-chat-msg doted-border">
+                      <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-name pull-left">Bubbles</span>
+                      </div>
+                      <!-- /.direct-chat-info -->
+                      <img alt="message user image" src="http://95.179.253.136/media/avatar/20/01/09/17/06/23dcec3c-6207-4702-a138-c1cf77d9fafb.jpg" class="direct-chat-img"><!-- /.direct-chat-img -->
+                      <div class="direct-chat-text">
+                        Hey bro, how’s everything going ?
+                      </div>
+					  <div class="direct-chat-info clearfix">
+                        <span class="direct-chat-timestamp pull-right">{{ current_time }}</span>
+                      </div>
+						<div class="direct-chat-info clearfix">
+						<span class="direct-chat-img-reply-small pull-left">
+
+						</span>
+						<span class="direct-chat-reply-name">Guest</span>
+						</div>
+						<div class="direct-chat-text js-chat-log">
+
+
+						</div>
+                    </div>
+                    <!-- /.direct-chat-msg -->
+
+                  </div>
+			</div>
+			<div class="popup-messages-footer">
+			<textarea id="status_message" class="form-control js-text" placeholder="Type a message..." rows="50" cols="40" name="message"></textarea>
+			<span class="input-group-btn">
+				<button class="btn btn-primary pull-right js-say">Submit</button>
+			</span>
+			</div>
+	  </div>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/js.cookie.js' %}"></script>
+<script src="{% static 'js/bootstrap.js' %}"></script>
+<script>
+			var chatterbotUrl = '{% url "chatterbot" %}';
+			var csrftoken = Cookies.get('csrftoken');
+
+			function csrfSafeMethod(method) {
+				// these HTTP methods do not require CSRF protection
+				return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+			}
+
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+					}
+				}
+			});
+
+			var $chatlog = $('.js-chat-log');
+			var $input = $('.js-text');
+			var $sayButton = $('.js-say');
+
+
+			function createRow(text) {
+				var $row = $('<li class="list-group-item"></li>');
+
+				$row.text(text);
+				$chatlog.append($row);
+			}
+
+			function submitInput() {
+				var inputData = {
+					'text': $input.val()
+				}
+
+				// Display the user's input on the web page
+				createRow(inputData.text);
+
+				var $submit = $.ajax({
+					type: 'POST',
+					url: chatterbotUrl,
+					data: JSON.stringify(inputData),
+					contentType: 'application/json'
+				});
+
+				$submit.done(function(statement) {
+						createRow(statement.text);
+
+						// Clear the input field
+						$input.val('');
+
+						// Scroll to the bottom of the chat interface
+						$chatlog[0].scrollTop = $chatlog[0].scrollHeight;
+				});
+
+				$submit.fail(function() {
+					// TODO: Handle errors
+				});
+			}
+
+			$sayButton.click(function() {
+				submitInput();
+			});
+
+			$input.keydown(function(event) {
+				// Submit the input when the enter button is pressed
+				if (event.keyCode == 13) {
+					submitInput();
+				}
+			});
+		</script>
+	</body>
+	</html>
