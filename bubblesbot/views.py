@@ -5,6 +5,8 @@ from django.views.generic import View
 from django.http import JsonResponse
 from chatterbot import ChatBot
 from chatterbot.ext.django_chatterbot import settings
+from chatterbot.trainers import ChatterBotCorpusTrainer
+
 
 
 
@@ -15,7 +17,6 @@ class ChatterBotAppView(TemplateView):
 class ChatterBotTest(TemplateView):
     template_name = 'bestchat.html'
 
-    current_date = datetime.datetime.now()
 
     def get_context_data(self, **kwargs):
         """
@@ -38,6 +39,10 @@ class ChatterBotApiView(View):
     """
 
     chatterbot = ChatBot(**settings.CHATTERBOT)
+
+    #trainer = ChatterBotCorpusTrainer(chatterbot)
+
+    #trainer.train('chatterbot.corpus.english')
 
     def post(self, request, *args, **kwargs):
         """

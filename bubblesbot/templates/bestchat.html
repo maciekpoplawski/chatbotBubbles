@@ -2,9 +2,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <script type="text/javascript">  $(function(){
 $("#chatbot_togle").click(function () {
@@ -37,7 +38,7 @@ $("#chatbot_togle").click(function () {
 						<button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-off"></i></button>
             </div>
 			  </div>
-			<div class="popup-messages">
+			<div class="popup-messages" id="messageswindow">
 
 
 
@@ -52,24 +53,12 @@ $("#chatbot_togle").click(function () {
 
 					<!-- Message. Default to the left -->
                     <div class="direct-chat-msg doted-border">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name pull-left">Bubbles</span>
-                      </div>
-                      <!-- /.direct-chat-info -->
-                      <img alt="message user image" src="http://95.179.253.136/media/avatar/20/01/09/17/06/23dcec3c-6207-4702-a138-c1cf77d9fafb.jpg" class="direct-chat-img"><!-- /.direct-chat-img -->
-                      <div class="direct-chat-text">
-                        Hey bro, how’s everything going ?
-                      </div>
-					  <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-timestamp pull-right">{{ current_time }}</span>
-                      </div>
-						<div class="direct-chat-info clearfix">
-						<span class="direct-chat-img-reply-small pull-left">
 
-						</span>
-						<span class="direct-chat-reply-name">Guest</span>
-						</div>
-						<div class="direct-chat-text js-chat-log">
+                      <!-- /.direct-chat-info -->
+
+
+
+						<div class="js-chat-log">
 
 
 						</div>
@@ -85,9 +74,7 @@ $("#chatbot_togle").click(function () {
 			</span>
 			</div>
 	  </div>
-<script src="{% static 'js/jquery.js' %}"></script>
 <script src="{% static 'js/js.cookie.js' %}"></script>
-<script src="{% static 'js/bootstrap.js' %}"></script>
 <script>
 			var chatterbotUrl = '{% url "chatterbot" %}';
 			var csrftoken = Cookies.get('csrftoken');
@@ -139,7 +126,7 @@ $("#chatbot_togle").click(function () {
 						$input.val('');
 
 						// Scroll to the bottom of the chat interface
-						$chatlog[0].scrollTop = $chatlog[0].scrollHeight;
+						document.getElementById('messageswindow').scrollTop = 9999999;
 				});
 
 				$submit.fail(function() {
